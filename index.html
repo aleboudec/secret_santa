@@ -92,13 +92,13 @@
       overflow: hidden;
       backdrop-filter: blur(8px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease, filter 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Rubans de cadeau de Noël décoratifs */
+    /* Rubans de cadeau */
     .card::before {
       content: '';
       position: absolute;
@@ -109,6 +109,7 @@
       transform: translateX(-50%);
       background: linear-gradient(180deg, #e63946, var(--red-ribbon));
       box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
+      transition: background 0.3s ease;
     }
 
     .card::after {
@@ -121,14 +122,15 @@
       transform: translateY(-50%);
       background: linear-gradient(90deg, #e63946, var(--red-ribbon));
       box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
+      transition: background 0.3s ease;
     }
 
     .card-badge {
       position: relative;
       z-index: 3;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      padding: 0.5rem 0.8rem;
+      min-width: 70px;
+      border-radius: 20px;
       background: radial-gradient(circle, var(--gold-bright) 0%, var(--gold) 100%);
       color: #3b2204;
       display: flex;
@@ -138,10 +140,10 @@
       font-size: 1.1rem;
       border: 2px solid #fff3c4;
       box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
-      transition: transform 0.25s ease;
+      transition: transform 0.25s ease, filter 0.3s ease;
     }
 
-    /* Effet de surbrillance demandé */
+    /* Effet surbrillance */
     .card:hover {
       transform: translateY(-6px) scale(1.02);
       border-color: var(--gold-bright);
@@ -151,8 +153,33 @@
     }
 
     .card:hover .card-badge {
-      transform: scale(1.15) rotate(5deg);
+      transform: scale(1.1) rotate(3deg);
       box-shadow: 0 0 18px var(--gold-bright);
+    }
+
+    /* --- ÉTAT QUAND LA CASE EST DÉJÀ OUVERTE (GRISÉE) --- */
+    .card.opened {
+      cursor: not-allowed;
+      opacity: 0.45;
+      filter: grayscale(100%);
+      background: rgba(40, 40, 40, 0.8);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: none !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .card.opened::before,
+    .card.opened::after {
+      background: #555;
+      box-shadow: none;
+    }
+
+    .card.opened .card-badge {
+      background: #777;
+      color: #222;
+      border-color: #999;
+      box-shadow: none;
+      transform: none !important;
     }
   </style>
 </head>
@@ -162,19 +189,19 @@
   <div class="container">
     <h1>Secret Santa de la famille Le Boudec</h1>
     <div class="grid">
-      <div class="card" aria-label="Case 1"><span class="card-badge">Maman</span></div>
-      <div class="card" aria-label="Case 2"><span class="card-badge">Alain</span></div>
-      <div class="card" aria-label="Case 3"><span class="card-badge">Alan</span></div>
-      <div class="card" aria-label="Case 4"><span class="card-badge">Gaetan</span></div>
-      <div class="card" aria-label="Case 5"><span class="card-badge">Antony</span></div>
-      <div class="card" aria-label="Case 6"><span class="card-badge">Mélissa</span></div>
-      <div class="card" aria-label="Case 7"><span class="card-badge">Audrey</span></div>
-      <div class="card" aria-label="Case 8"><span class="card-badge">Laura</span></div>
+      <div class="card" data-id="maman" aria-label="Case Maman"><span class="card-badge">Maman</span></div>
+      <div class="card" data-id="alain" aria-label="Case Alain"><span class="card-badge">Alain</span></div>
+      <div class="card" data-id="alan" aria-label="Case Alan"><span class="card-badge">Alan</span></div>
+      <div class="card" data-id="gaetan" aria-label="Case Gaetan"><span class="card-badge">Gaetan</span></div>
+      <div class="card" data-id="antony" aria-label="Case Antony"><span class="card-badge">Antony</span></div>
+      <div class="card" data-id="melissa" aria-label="Case Mélissa"><span class="card-badge">Mélissa</span></div>
+      <div class="card" data-id="audrey" aria-label="Case Audrey"><span class="card-badge">Audrey</span></div>
+      <div class="card" data-id="laura" aria-label="Case Laura"><span class="card-badge">Laura</span></div>
     </div>
   </div>
 
   <script>
-    // Animation de flocons légers
+    // Animation de neige
     const canvas = document.getElementById('snow');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
@@ -211,25 +238,52 @@
     }
     loop();
   </script>
+
+  <!-- Logique Firebase -->
   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAOWgeaDMcc8Uug5oeRcb6jK2pafAm77zk",
-    authDomain: "secret-santa-74ad7.firebaseapp.com",
-    databaseURL: "https://secret-santa-74ad7-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "secret-santa-74ad7",
-    storageBucket: "secret-santa-74ad7.firebasestorage.app",
-    messagingSenderId: "562027077962",
-    appId: "1:562027077962:web:5572eb7835d98bcfe7a1b3"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOWgeaDMcc8Uug5oeRcb6jK2pafAm77zk",
+      authDomain: "secret-santa-74ad7.firebaseapp.com",
+      databaseURL: "https://secret-santa-74ad7-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "secret-santa-74ad7",
+      storageBucket: "secret-santa-74ad7.firebasestorage.app",
+      messagingSenderId: "562027077962",
+      appId: "1:562027077962:web:5572eb7835d98bcfe7a1b3"
+    };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+    // Connexion Firebase & Realtime Database
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const casesRef = ref(db, 'cases');
+
+    const cards = document.querySelectorAll('.card');
+
+    // 1. Écoute en temps réel : met à jour l'affichage dès qu'une case est ouverte
+    onValue(casesRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      cards.forEach(card => {
+        const id = card.getAttribute('data-id');
+        if (data[id] === true) {
+          card.classList.add('opened');
+        } else {
+          card.classList.remove('opened');
+        }
+      });
+    });
+
+    // 2. Gestion du clic
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-id');
+        // Si elle n'est pas encore ouverte, on l'enregistre
+        if (!card.classList.contains('opened')) {
+          set(ref(db, 'cases/' + id), true);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
