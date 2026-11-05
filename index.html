@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Santa de la famille Le Boudec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0a1f18;
+      --bg-card: rgba(22, 45, 36, 0.7);
+      --gold: #d4af37;
+      --gold-bright: #ffe58f;
+      --red-ribbon: #c41e3a;
+      --white-snow: #f8f9fa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, #153a2d 0%, var(--bg-deep) 75%);
+      color: var(--white-snow);
+      font-family: 'Cinzel', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    #snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Mountains of Christmas', cursive;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      color: var(--gold-bright);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.45), 0 4px 10px rgba(0, 0, 0, 0.7);
+      margin-bottom: 2.8rem;
+      letter-spacing: 1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      position: relative;
+      height: 180px;
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Rubans de cadeau de Noël décoratifs */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 14px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #e63946, var(--red-ribbon));
+      box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 14px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, #e63946, var(--red-ribbon));
+      box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
+    }
+
+    .card-badge {
+      position: relative;
+      z-index: 3;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--gold-bright) 0%, var(--gold) 100%);
+      color: #3b2204;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: 2px solid #fff3c4;
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+      transition: transform 0.25s ease;
+    }
+
+    /* Effet de surbrillance demandé */
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--gold-bright);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 
+                  0 0 25px rgba(212, 175, 55, 0.45),
+                  inset 0 0 18px rgba(212, 175, 55, 0.2);
+    }
+
+    .card:hover .card-badge {
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 0 18px var(--gold-bright);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="snow"></canvas>
+
+  <div class="container">
+    <h1>Secret Santa de la famille Le Boudec</h1>
+    <div class="grid">
+      <div class="card" aria-label="Case 1"><span class="card-badge">1</span></div>
+      <div class="card" aria-label="Case 2"><span class="card-badge">2</span></div>
+      <div class="card" aria-label="Case 3"><span class="card-badge">3</span></div>
+      <div class="card" aria-label="Case 4"><span class="card-badge">4</span></div>
+      <div class="card" aria-label="Case 5"><span class="card-badge">5</span></div>
+      <div class="card" aria-label="Case 6"><span class="card-badge">6</span></div>
+      <div class="card" aria-label="Case 7"><span class="card-badge">7</span></div>
+      <div class="card" aria-label="Case 8"><span class="card-badge">8</span></div>
+    </div>
+  </div>
+
+  <script>
+    // Animation de flocons légers
+    const canvas = document.getElementById('snow');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const flakes = Array.from({ length: 55 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2.5 + 1,
+      speed: Math.random() * 0.9 + 0.4,
+      sway: Math.random() * 0.02
+    }));
+
+    function loop() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      flakes.forEach(f => {
+        f.y += f.speed;
+        f.x += Math.sin(f.y * f.sway) * 0.4;
+        if (f.y > height) {
+          f.y = -5;
+          f.x = Math.random() * width;
+        }
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>
