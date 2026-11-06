@@ -74,7 +74,6 @@
       height: 3px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
       z-index: 2;
-      /* Position verticale : à ajuster si besoin */
       top: calc(clamp(220px, 34vw, 420px) * 0.59 - 1.2rem);
     }
 
@@ -83,7 +82,7 @@
       height: auto;
       display: block;
       position: relative;
-      z-index: 3; /* devant la barre */
+      z-index: 3;
       margin-bottom: -1.2rem;
       filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
     }
@@ -98,33 +97,22 @@
       letter-spacing: 1px;
     }
 
-   .grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 800px;
-  margin: 0 auto;
-}
+    /* --- GRILLE 3 x 2 --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 400px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-    @media (max-width: 900px) {
+    @media (max-width: 600px) {
       .grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 400px) {
       .grid {
         grid-template-columns: 1fr;
       }
@@ -195,7 +183,7 @@
     .card:hover {
       transform: translateY(-6px) scale(1.02);
       border-color: var(--gold-bright);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5),
                   0 0 25px rgba(212, 175, 55, 0.45),
                   inset 0 0 18px rgba(212, 175, 55, 0.2);
     }
@@ -205,9 +193,8 @@
       box-shadow: 0 0 18px var(--gold-bright);
     }
 
-    /* --- ÉTAT QUAND LA CASE EST DÉJÀ OUVERTE (GRISÉE) --- */
+    /* --- CASE DÉJÀ OUVERTE (GRISÉE) --- */
     .card.opened {
-      cursor: not-allowed;
       opacity: 0.45;
       filter: grayscale(100%);
       background: rgba(40, 40, 40, 0.8);
@@ -229,6 +216,62 @@
       box-shadow: none;
       transform: none !important;
     }
+
+    /* --- POPUP RÉSULTAT --- */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1.5rem;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: linear-gradient(145deg, #153a2d, #0a1f18);
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+    }
+
+    .modal-intro {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--white-snow);
+    }
+
+    .modal-name {
+      font-family: 'Mountains of Christmas', cursive;
+      font-size: 3.2rem;
+      color: var(--gold-bright);
+      margin-bottom: 2rem;
+      text-shadow: 0 0 15px rgba(255, 229, 143, 0.5);
+    }
+
+    .modal-close {
+      background: var(--red-ribbon);
+      color: white;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 999px;
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      filter: brightness(1.15);
+    }
   </style>
 </head>
 <body>
@@ -247,6 +290,15 @@
       <div class="card" data-id="gaetan" aria-label="Case Gaetan"><span class="card-badge">Gaetan</span></div>
       <div class="card" data-id="antony" aria-label="Case Antony"><span class="card-badge">Antony</span></div>
       <div class="card" data-id="melissa" aria-label="Case Mélissa"><span class="card-badge">Mélissa</span></div>
+    </div>
+  </div>
+
+  <!-- Popup résultat -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <p class="modal-intro" id="modal-intro"></p>
+      <p class="modal-name" id="modal-name"></p>
+      <button class="modal-close" id="modal-close">Fermer</button>
     </div>
   </div>
 
@@ -289,10 +341,10 @@
     loop();
   </script>
 
-  <!-- Logique Firebase -->
+  <!-- Logique Firebase + Secret Santa -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAOWgeaDMcc8Uug5oeRcb6jK2pafAm77zk",
@@ -304,33 +356,98 @@
       appId: "1:562027077962:web:5572eb7835d98bcfe7a1b3"
     };
 
-    // Connexion Firebase & Realtime Database
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const casesRef = ref(db, 'cases');
+
+    // Participants : id (data-id des cartes) -> nom affiché
+    const participants = {
+      maman:   "Maman",
+      alain:   "Alain",
+      alan:    "Alan",
+      gaetan:  "Gaetan",
+      antony:  "Antony",
+      melissa: "Mélissa"
+    };
 
     const cards = document.querySelectorAll('.card');
+    const modal = document.getElementById('modal');
+    const modalIntro = document.getElementById('modal-intro');
+    const modalName = document.getElementById('modal-name');
 
-    // 1. Écoute en temps réel : met à jour l'affichage dès qu'une case est ouverte
-    onValue(casesRef, (snapshot) => {
+    document.getElementById('modal-close').addEventListener('click', () => {
+      modal.classList.remove('show');
+    });
+
+    // Mélange (Fisher-Yates)
+    function melanger(tableau) {
+      const t = [...tableau];
+      for (let i = t.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [t[i], t[j]] = [t[j], t[i]];
+      }
+      return t;
+    }
+
+    // Génère un tirage complet en cercle : personne ne tombe sur lui-même,
+    // chaque personne donne à 1 seule et reçoit de 1 seule. Zéro blocage possible.
+    function genererTirage() {
+      const ids = melanger(Object.keys(participants));
+      const tirage = {};
+      for (let i = 0; i < ids.length; i++) {
+        tirage[ids[i]] = ids[(i + 1) % ids.length];
+      }
+      return tirage;
+    }
+
+    // Griser en temps réel les cases déjà ouvertes
+    onValue(ref(db, 'ouvertes'), (snapshot) => {
       const data = snapshot.val() || {};
       cards.forEach(card => {
         const id = card.getAttribute('data-id');
-        if (data[id] === true) {
-          card.classList.add('opened');
-        } else {
-          card.classList.remove('opened');
-        }
+        card.classList.toggle('opened', data[id] === true);
       });
     });
 
-    // 2. Gestion du clic
+    function afficher(id, cibleId) {
+      modalIntro.textContent = `${participants[id]}, tu offres un cadeau à :`;
+      modalName.textContent = participants[cibleId];
+      modal.classList.add('show');
+    }
+
+    // Création du tirage (une seule fois, de façon atomique)
+    async function assurerTirage() {
+      await runTransaction(ref(db, 'tirage'), (actuel) => {
+        if (actuel) return actuel; // déjà créé, on ne touche à rien
+        return genererTirage();
+      });
+    }
+
     cards.forEach(card => {
-      card.addEventListener('click', () => {
+      card.addEventListener('click', async () => {
         const id = card.getAttribute('data-id');
-        // Si elle n'est pas encore ouverte, on l'enregistre
-        if (!card.classList.contains('opened')) {
-          set(ref(db, 'cases/' + id), true);
+
+        try {
+          // S'assure que le tirage existe
+          await assurerTirage();
+
+          // Récupère le résultat de cette personne
+          const snap = await get(ref(db, 'tirage/' + id));
+          const cibleId = snap.val();
+          if (!cibleId) return;
+
+          // Si la case a déjà été ouverte, on demande confirmation avant de ré-afficher
+          const dejaOuverte = card.classList.contains('opened');
+          if (dejaOuverte) {
+            if (!confirm("Tu as déjà ouvert ta case. Veux-tu revoir ton résultat ?")) return;
+          } else {
+            // Marque la case comme ouverte
+            await runTransaction(ref(db, 'ouvertes/' + id), () => true);
+          }
+
+          afficher(id, cibleId);
+        } catch (err) {
+          console.error(err);
+          alert("Une erreur est survenue, réessaie dans un instant.");
         }
       });
     });
