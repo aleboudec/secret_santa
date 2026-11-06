@@ -64,38 +64,38 @@
       margin-bottom: 2.8rem;
     }
 
-    .santa {
-      width: clamp(220px, 34vw, 420px);
-      height: auto;
-      display: block;
-      position: relative;
-      z-index: 1;
-      margin-bottom: -1.2rem; /* le bas de l'image passe derrière le titre */
-      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
-    }
-
-    h1 {
-      font-family: 'Mountains of Christmas', cursive;
-      font-size: clamp(2.4rem, 6vw, 4.5rem);
-      color: var(--gold-bright);
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.45), 0 4px 10px rgba(0, 0, 0, 0.7);
-      margin-bottom: 0;
-      padding-top: 0.3rem;
-      letter-spacing: 1px;
-      position: relative;
-      z-index: 2; /* le titre passe devant le bas du père Noël */
-    }
-
-    /* Fine barre dorée = le "rebord" sur lequel il s'appuie */
-    h1::before {
+    /* Barre dorée : derrière le père Noël */
+    .hero::after {
       content: '';
       position: absolute;
-      top: 0;
       left: 50%;
       transform: translateX(-50%);
       width: min(90%, 900px);
       height: 3px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      z-index: 2;
+      /* Position verticale : à ajuster si besoin */
+      top: calc(clamp(220px, 34vw, 420px) * 0.59 - 1.2rem);
+    }
+
+    .santa {
+      width: clamp(220px, 34vw, 420px);
+      height: auto;
+      display: block;
+      position: relative;
+      z-index: 3; /* devant la barre */
+      margin-bottom: -1.2rem;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      font-family: 'Mountains of Christmas', cursive;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      color: var(--gold-bright);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.45), 0 4px 10px rgba(0, 0, 0, 0.7);
+      letter-spacing: 1px;
     }
 
     .grid {
@@ -222,7 +222,7 @@
 
   <div class="container">
     <div class="hero">
-      <img src="pere-noel.png" alt="Père Noël" class="santa">
+      <img class="santa" src="pere-noel.png" alt="Père Noël">
       <h1>Secret Santa de la famille Le Boudec</h1>
     </div>
 
