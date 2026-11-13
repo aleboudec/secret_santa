@@ -8,10 +8,16 @@ const CADEAUX = [
     prix: "39 €"
   },
   {
-    nom: "Exemple cadeau 2",
-    image: "https://exemple.com/photo.jpg",
-    lien: "https://exemple.com",
-    prix: "25 €"
-  }
+    nom: "Chaussettes Batman",
+    image: "https://fr.jimmylion.com/cdn/shop/files/Athletic-Batman-Pack_Various_3.jpg?v=1789035199&width=832",
+    lien: "https://fr.jimmylion.com/products/coffret-cadeau-chaussettes-athletic-batman-various?variant=54031421407560",
+    prix: "44,95 €"
+  },
   // Ajoute autant de cadeaux que tu veux ici 👇
+  {
+    nom: "Chaussettes Goonies",
+    image: "https://fr.jimmylion.com/cdn/shop/files/Athletic-Goonies-Pack_Various_4.webp?v=1763652742&width=2840",
+    lien: "https://fr.jimmylion.com/products/coffret-cadeau-chaussettes-athletic-goonies?variant=48964595876168",
+    prix: "44,95 €"
+  }
 ];
