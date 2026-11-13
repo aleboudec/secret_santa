@@ -31,6 +31,43 @@ const CADEAUX = [
     image: "https://images.asos-media.com/products/nike-dunk-low-retro-prm-baskets-en-velours-cotele-vert/210222506-1-midgreen?$n_1920w$&wid=1926&fit=constrain",
     lien: "https://www.asos.com/fr/nike/nike-dunk-low-retro-prm-baskets-en-velours-cotele-vert/prd/210222506?affid=29082&_1b043dc187651250874d5736e19e5509&channelref=product+search&ppcadref=506189383|1260041980031728|pla-2330552334478671&utm_source=bing&utm_medium=cpc&utm_campaign=506189383=&utm_content=1260041980031728&utm_term=&gclid=1b043dc187651250874d5736e19e5509&msclkid=1b043dc187651250874d5736e19e5509",
     prix: "129 €"
+  },
+  {
+    nom: "Casquettes élément Icon Dad Corduroy",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elyha00203_element,p_gzh0_frt1.jpg",
+    lien: "https://www.elementbrand.fr/icon-dad-corduroy-casquette-reglable-classique-vert-pour-unisexe/ELYHA00203-GZH0.html?dwvar_ELYHA00203-GZH0_color=gzh0",
+    prix: "30 €"
+  },
+  {
+    nom: "Pull élément Icon Embroidery Sw",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elysw00115_element,w_tzeh_frt1.jpg",
+    lien: "https://www.elementbrand.fr/icon-embroidery-sw-pull-a-col-rond-beige-pour-homme/ELYSW00115-TZEH.html?dwvar_ELYSW00115-TZEH_size=l&dwvar_ELYSW00115-TZEH_color=tzeh&sizeSelectorReset=false",
+    prix: "75 €"
+  },
+  {
+    nom: "T-shirt élément Icon Label pocket",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elykt00198_element,w_ppw0_frt1.jpg",
+    lien: "https://www.elementbrand.fr/icon-label-pocket-t-shirt-a-manches-courtes-violet-pour-homme/ELYKT00198-PPW0.html",
+    prix: "18 €"
+  },
+  {
+    nom: "Sweat élément marron",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elysf00315_element,f_gzh0_frt1.jpg",
+    lien: "https://www.elementbrand.fr/timber-guard-dogs-po-sweat-a-capuche-vert-pour-homme/ELYSF00315-GZH0.html?dwvar_ELYSF00315-GZH0_size=l&dwvar_ELYSF00315-GZH0_color=gzh0&sizeSelectorReset=false",
+    prix: "37 €"
+  },
+  {
+    nom: "Sweat élément beige",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elyft00191_element,f_tkh0_frt1.jpg",
+    lien: "https://www.elementbrand.fr/cornell-cipher-sweat-a-capuche-beige-pour-homme/ELYFT00191-TKH0.html?dwvar_ELYFT00191-TKH0_size=l&dwvar_ELYFT00191-TKH0_color=tkh0&sizeSelectorReset=false",
+    prix: "42 €"
+  },
+  {
+    nom: "Sweat élément bleu Elemen co",
+    image: "https://images.napali.app/global/element-products/all/default/xlarge/elyft00215_element,f_brq0_frt1.jpg",
+    lien: "https://www.elementbrand.fr/element-co-sweat-a-capuche-bleu-pour-homme/ELYFT00215-BRQ0.html?dwvar_ELYFT00215-BRQ0_size=l&dwvar_ELYFT00215-BRQ0_color=brq0&sizeSelectorReset=false",
+    prix: "45 €"
   }
+  
    
 ];
