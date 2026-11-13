@@ -51,80 +51,64 @@
 
     h1 {
       font-family: 'Mountains of Christmas', cursive;
-      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
       color: var(--gold-bright);
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.45), 0 4px 10px rgba(0, 0, 0, 0.7);
-      letter-spacing: 1px;
+      text-shadow: 0 0 22px rgba(212, 175, 55, 0.55), 0 3px 6px rgba(0, 0, 0, 0.5);
+      margin-bottom: 0.5rem;
     }
 
-    .sous-titre { color: #c9d8d0; margin-top: 0.5rem; font-size: 1rem; }
+    .subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(248, 249, 250, 0.75);
+    }
 
-    /* --- GRILLE DES CADEAUX --- */
+    .divider {
+      width: min(340px, 70%);
+      height: 2px; margin: 1.4rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 2px;
+    }
+
+    /* ====== GRILLE DES CADEAUX ====== */
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.6rem;
     }
-
-    @media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 450px) { .grid { grid-template-columns: 1fr; } }
 
     .card {
       position: relative;
+      display: flex; flex-direction: column;
       background: var(--bg-card);
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 16px;
       overflow: hidden;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-      display: flex;
-      flex-direction: column;
       text-decoration: none;
       color: inherit;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      animation: pop 0.5s ease backwards;
     }
 
-    /* Ruban vertical du cadeau */
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; left: 50%;
-      width: 10px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, #e63946, var(--red-ribbon));
-      box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
-      opacity: 0.85;
-      pointer-events: none;
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.15s; }
+    .card:nth-child(3) { animation-delay: 0.25s; }
+    .card:nth-child(4) { animation-delay: 0.35s; }
+    .card:nth-child(5) { animation-delay: 0.45s; }
+    .card:nth-child(6) { animation-delay: 0.55s; }
+
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(22px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Ruban horizontal par-dessus l'image */
-    .card::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; top: 50%;
-      height: 10px;
-      transform: translateY(-50%);
-      background: linear-gradient(90deg, #e63946, var(--red-ribbon));
-      box-shadow: 0 0 8px rgba(196, 30, 58, 0.4);
-      opacity: 0.85;
-      pointer-events: none;
-    }
-
-    /* Prix en badge doré au coin */
-    .card-prix {
-      position: absolute;
-      top: 10px; right: 10px;
-      z-index: 3;
-      padding: 0.25rem 0.6rem;
-      border-radius: 20px;
-      background: radial-gradient(circle, var(--gold-bright) 0%, var(--gold) 100%);
-      color: #3b2204;
-      font-weight: 700;
-      font-size: 0.85rem;
-      border: 2px solid #fff3c4;
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.25);
+      border-color: var(--gold);
     }
 
     .card-image {
@@ -132,98 +116,70 @@
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
+      background: rgba(0, 0, 0, 0.25);
     }
 
     .card-nom {
-      padding: 0.9rem 0.8rem 1rem;
-      font-size: 0.95rem;
+      padding: 1rem 1rem 0.4rem;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .card-prix {
+      align-self: flex-start;
+      margin: 0 1rem 1.1rem;
+      padding: 0.25rem 0.8rem;
+      background: linear-gradient(135deg, var(--gold), #b8912a);
+      color: #1a1206;
+      border-radius: 999px;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: var(--gold-bright);
-      background: rgba(10, 31, 24, 0.6);
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
     }
 
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      border-color: var(--gold-bright);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5),
-                  0 0 25px rgba(212, 175, 55, 0.45);
+    /* Ruban de Noël en haut de chaque carte */
+    .card::before {
+      content: "🎁";
+      position: absolute;
+      top: 0.7rem; left: 0.7rem;
+      font-size: 1.3rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      z-index: 2;
     }
 
-    .apercu { margin-top: 2rem; color: #c9d8d0; font-size: 0.8rem; }
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: rgba(248, 249, 250, 0.5);
+    }
   </style>
 </head>
 <body>
+
   <canvas id="snow"></canvas>
 
   <div class="container">
-    <div class="hero">
-      <img class="santa" src="pere-noel.png" alt="Père Noël">
-      <h1>Ma liste de Noël 🎁</h1>
-      <p class="sous-titre">Clique sur un cadeau pour voir où le trouver !</p>
-    </div>
+    <header class="hero">
+      <!-- Mets ton image du père Noël ici (ou supprime la ligne si tu n'en veux pas) -->
+      <img src="pere-noel.png" alt="Père Noël" class="santa">
+      <h1>Ma liste de Noël</h1>
+      <p class="subtitle">Clique sur un cadeau pour le découvrir 🎁</p>
+      <div class="divider"></div>
+    </header>
 
-    <div class="grid" id="grid"></div>
+    <main class="grid" id="grid">
+      <!-- Les cadeaux s'affichent ici automatiquement -->
+    </main>
 
-    <p class="apercu">🎄 Il reste encore de la place sous le sapin…</p>
+    <p class="footer">Ho ho ho, joyeuses fêtes ! 🎅✨</p>
   </div>
 
+  <!-- ====== TA LISTE DE CADEAUX (fichier séparé) ====== -->
+  <script src="cadeaux.js"></script>
+
   <script>
-    // ====== ANIMATION DE NEIGE ======
-    const canvas = document.getElementById('snow');
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const flakes = Array.from({ length: 55 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 2.5 + 1,
-      speed: Math.random() * 0.9 + 0.4,
-      sway: Math.random() * 0.02
-    }));
-
-    function loop() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      flakes.forEach(f => {
-        f.y += f.speed;
-        f.x += Math.sin(f.y * f.sway) * 0.4;
-        if (f.y > height) { f.y = -5; f.x = Math.random() * width; }
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    // ====== MA LISTE DE CADEAUX ======
-    // 👉 C'EST ICI QUE TU AJOUTES TES CADEAUX !
-    // - nom  : le nom du cadeau
-    // - image : le lien de la photo du produit
-    // - lien : l'adresse du site où l'acheter
-    // - prix : (optionnel) le prix affiché
-    const CADEAUX = [
-      {
-        nom: "Chaussettes Jimmy Lion 🦊",
-        image: "https://exemple.com/chaussettes.jpg",
-        lien: "https://www.jimmylion.com/chaussettes",
-        prix: "12 €"
-      },
-      {
-        nom: "Exemple cadeau 2",
-        image: "https://exemple.com/photo.jpg",
-        lien: "https://exemple.com",
-        prix: "25 €"
-      }
-      // Ajoute autant de cadeaux que tu veux ici 👇
-    ];
-
     // ====== AFFICHAGE DES CADEAUX ======
     const grid = document.getElementById('grid');
 
@@ -255,6 +211,58 @@
 
       grid.appendChild(carte);
     });
+
+    // ====== ANIMATION DE NEIGE ======
+    const canvas = document.getElementById('snow');
+    const ctx = canvas.getContext('2d');
+
+    let flocons = [];
+
+    function redimensionner() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', redimensionner);
+    redimensionner();
+
+    function creerFlocon() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        rayon: Math.random() * 3 + 1,
+        vitesse: Math.random() * 1 + 0.4,
+        derive: Math.random() * 1 - 0.5
+      };
+    }
+
+    const NOMBRE_FLOCONS = 120;
+    for (let i = 0; i < NOMBRE_FLOCONS; i++) {
+      flocons.push(creerFlocon());
+    }
+
+    function animer() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+
+      flocons.forEach(flocon => {
+        flocon.y += flocon.vitesse;
+        flocon.x += flocon.derive;
+
+        if (flocon.y > canvas.height + 5) {
+          flocon.y = -5;
+          flocon.x = Math.random() * canvas.width;
+        }
+        if (flocon.x > canvas.width + 5) flocon.x = -5;
+        if (flocon.x < -5) flocon.x = canvas.width + 5;
+
+        ctx.beginPath();
+        ctx.arc(flocon.x, flocon.y, flocon.rayon, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animer);
+    }
+    animer();
   </script>
 </body>
 </html>
